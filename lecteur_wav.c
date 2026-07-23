@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
+#define L 16
 
 typedef struct sound {
     int n_samples;      // nombre d'échantillons
@@ -106,3 +108,4 @@ sound_t* wav_to_sound(char* filename) {
     fclose(f);
     return s;
 }
+
