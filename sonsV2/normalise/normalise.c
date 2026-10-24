@@ -39,13 +39,13 @@ sound_t* duree(sound_t* s, int n ){
     sound_t* rslt = malloc(sizeof(sound_t));
     rslt->n_samples = n;
     rslt->samples = malloc(n*sizeof(int16_t));
-    for (int i = 200; i<(n+300); i++){
-        if (i>s->n_samples){
+    for (int i = 200; i<(n+200); i++){
+        if (i>=s->n_samples){
             free_sound_t(s);
             printf("le son est trop court, il ne fait pas la taille attendue");
             return rslt;
         }
-        rslt->samples[i-300] = s->samples[i];
+        rslt->samples[i-200] = s->samples[i];
     }
     free_sound_t(s);
     return rslt;
