@@ -51,6 +51,25 @@ sound_t* duree(sound_t* s, int n ){
     return rslt;
 }
 
+/*filtre passe bas de fc=4000Hz (c'est bien pour la voix askip)*/
+sound_t* passe_bas(sound_t* s){
+    float fc = 4000.0;
+    float fs = 44100.0;
+    float alpha = (2*3.1415*fc)/(2*3.1415*fc + fs);
+    int n = s->n_samples;
+
+    sound_t* rslt = malloc(sizeof(sound_t));
+    rslt->n_samples = n;
+    rslt->samples = malloc(n*sizeof(int16_t));
+    rslt->samples[0]=0;
+    
+    for (int i = 1 ; i<n ; i++){
+        rslt->samples[i] = alpha*s->samples[i] + (1-alpha)*s->samples[i-1];
+    }
+    free_sound_t(s);
+    return rslt;
+}
+
 //normalise
 //type pour duree de la lettre 0 consonne 
 // 1 voyelle courte 2 voyelle longue
@@ -61,7 +80,8 @@ sound_t* normalise(sound_t* s , int type){
     if (type==2) { n = 8820;}
     sound_t* rslt = duree(s , n);
     volume(rslt);
-    return rslt;
+    sound_t* rslt2 = passe_bas(rslt);
+    return rslt2;
 }
 
 int main(){
