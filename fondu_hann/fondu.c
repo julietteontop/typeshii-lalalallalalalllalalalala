@@ -53,8 +53,8 @@ sound_t** separe_son (sound_t* s1, sound_t* s2, int id){
     fins2->samples = malloc((n2 -nb_ech)* sizeof(int16_t));
 
     sound_t** res = malloc(sizeof(sound_t*)*4);
-    res[0]=debs1;
-    res[1]= fins1;
+    res[0] = debs1;
+    res[1] = fins1;
     res[2] = debs2;
     res[3] = fins2;
 
@@ -76,6 +76,7 @@ sound_t** separe_son (sound_t* s1, sound_t* s2, int id){
             fins2->samples [i - nb_ech] = s2->samples[i];
         }
     }
+
     printf("separe son ok \n");
     return res;
 
@@ -123,11 +124,10 @@ sound_t* fondu(sound_t* s1, sound_t* s2, int fe, int id){
     printf("track ok \n");
     sound_t* res = reduce_track (tr);
 
-    // for(int i =0; i<4; i++){
-    //     free_sound_t (tab[i]);
-    // }
-    // free_sound_t (fond); 
-    // free_track_t (tr);
+    free_sound_t (tab[1]);
+    free_sound_t(tab[2]);
+    
+    free_track_t (tr);
     printf("fondu ok \n");
     return res ; 
 
@@ -169,6 +169,29 @@ int main(){
 
     save_sound("bjr_monde_ronjon.wav", fin);
     printf("ok");
+
+
+    free_sound_t(bon);
+    free_sound_t(j);
+    free_sound_t(ou);
+    free_sound_t(r);
+    free_sound_t(m);
+    free_sound_t(on);
+    free_sound_t(de);
+    free_sound_t(espace);
+
+    free_sound_t(n1);
+    free_sound_t(n2);
+    free_sound_t(n3);
+    free_sound_t(n4);
+    free_sound_t(n5);
+    free_sound_t(n6);
+    free_sound_t(n7);
+    free_sound_t(n8);
+    free_sound_t(n9);
+    free_sound_t(n10);
+    free_sound_t(n11);
+    free_sound_t(n12);
 
 
     free_sound_t(fin);
