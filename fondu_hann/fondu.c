@@ -9,7 +9,7 @@
 
 #define FE 44100
 #define TEMPS_CONS 0.05
-#define TEMPS_VOY 0.02
+#define TEMPS_VOY 0.03
 #define TEMPS_ENTRE_SYL 0.01
 
 //Renvoie un tableau contenant débuts1, fins1, debuts2, fins2 où finS1 et début s2 ont nb_ech sample
@@ -77,7 +77,7 @@ sound_t** separe_son (sound_t* s1, sound_t* s2, int id){
         }
     }
 
-    printf("separe son ok \n");
+    
     return res;
 
 }
@@ -103,7 +103,6 @@ sound_t* fenetre_hann(sound_t* fin, sound_t* deb , int fe){
         res->samples[i] = fin_son*fin->samples[i] + debut_son*deb->samples[i];
         
     }
-    printf("hann ok \n");
     return res;
 
 
@@ -121,22 +120,22 @@ sound_t* fondu(sound_t* s1, sound_t* s2, int fe, int id){
     tr->sounds[0] = tab[0];
     tr->sounds[1]=fond;
     tr->sounds[2]=tab[3];
-    printf("track ok \n");
+    
     sound_t* res = reduce_track (tr);
 
     free_sound_t (tab[1]);
     free_sound_t(tab[2]);
+    free(tab);
     
     free_track_t (tr);
-    printf("fondu ok \n");
     return res ; 
 
 }
 
 
 int main(){
-    //wav to sound
-    printf("ok");
+    
+
     sound_t* bon = wav_to_sound("bon.wav");
     sound_t* j = wav_to_sound("j.wav");
     sound_t* ou = wav_to_sound("ou.wav");
@@ -147,9 +146,6 @@ int main(){
     sound_t* de =wav_to_sound("de.wav");
 
 
-
-    
-    printf("debut fondus ok \n");
 
     sound_t* n1 = fondu(bon , j , FE, 2);
     sound_t* n2 = fondu(n1 , ou , FE, 0);
@@ -165,10 +161,9 @@ int main(){
     sound_t* n12 = fondu(n11 , on , FE, 0);
     sound_t* fin = fondu(n12 , r , FE, 1);
 
-    printf("fin des fondus ok \n");
 
     save_sound("bjr_monde_ronjon.wav", fin);
-    printf("ok");
+
 
 
     free_sound_t(bon);
