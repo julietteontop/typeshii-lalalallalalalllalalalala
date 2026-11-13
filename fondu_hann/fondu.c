@@ -124,12 +124,10 @@ sound_t* fondu(sound_t* s1, sound_t* s2, int fe, int id){
     tr->sounds[2]=tab[3];
     printf("track ok \n");
     sound_t* res = reduce_track (tr);
-
-    // for(int i =0; i<4; i++){
-    //     free_sound_t (tab[i]);
-    // }
-    // free_sound_t (fond); 
-    // free_track_t (tr);
+    free_track_t(tr);
+    free_sound_t(tab[1]);
+    free_sound_t(tab[2]);
+    free(tab);
     printf("fondu ok \n");
     return res ; 
 
@@ -179,6 +177,29 @@ int main(){
     sound_t* n9 = fondu(n8 , b , FE, 2);
     sound_t* n10 = fondu(n9 , j , FE, 0);
     sound_t* fin = fondu(n10 , in , FE, 1);
+
+    //libération 
+    free(n1);
+    free(n2);
+    free(n3);
+    free(n4);
+    free(n5);
+    free(n6);
+    free(n7);
+    free(n8);
+    free(n9);
+    free(n10);
+    free(s);
+    free(a);
+    free(v);
+    free(t );
+    free(R );
+    free(espace);
+    free(b );
+    free(j);
+    free(E );
+    free(in);
+
 
 
     printf("fin des fondus ok \n");
