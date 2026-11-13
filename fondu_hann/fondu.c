@@ -6,10 +6,12 @@
 #include <math.h>
 #include "wav.h"
 #include "sound.h"
+#include "normalise.h"
+#include "fondu.h"
 
 #define FE 44100
 #define TEMPS_CONS 0.05
-#define TEMPS_VOY 0.03
+#define TEMPS_VOY 0.02
 #define TEMPS_ENTRE_SYL 0.01
 
 //Renvoie un tableau contenant débuts1, fins1, debuts2, fins2 où finS1 et début s2 ont nb_ech sample
@@ -53,8 +55,8 @@ sound_t** separe_son (sound_t* s1, sound_t* s2, int id){
     fins2->samples = malloc((n2 -nb_ech)* sizeof(int16_t));
 
     sound_t** res = malloc(sizeof(sound_t*)*4);
-    res[0] = debs1;
-    res[1] = fins1;
+    res[0]=debs1;
+    res[1]= fins1;
     res[2] = debs2;
     res[3] = fins2;
 
@@ -76,8 +78,7 @@ sound_t** separe_son (sound_t* s1, sound_t* s2, int id){
             fins2->samples [i - nb_ech] = s2->samples[i];
         }
     }
-
-    
+    printf("separe son ok \n");
     return res;
 
 }
@@ -103,6 +104,7 @@ sound_t* fenetre_hann(sound_t* fin, sound_t* deb , int fe){
         res->samples[i] = fin_son*fin->samples[i] + debut_son*deb->samples[i];
         
     }
+    printf("hann ok \n");
     return res;
 
 
@@ -120,78 +122,71 @@ sound_t* fondu(sound_t* s1, sound_t* s2, int fe, int id){
     tr->sounds[0] = tab[0];
     tr->sounds[1]=fond;
     tr->sounds[2]=tab[3];
-    
+    printf("track ok \n");
     sound_t* res = reduce_track (tr);
 
-    free_sound_t (tab[1]);
-    free_sound_t(tab[2]);
-    free(tab);
-    
-    free_track_t (tr);
+    // for(int i =0; i<4; i++){
+    //     free_sound_t (tab[i]);
+    // }
+    // free_sound_t (fond); 
+    // free_track_t (tr);
+    printf("fondu ok \n");
     return res ; 
 
 }
 
-
+//sa va tRE bj5
 int main(){
-    
-
-    sound_t* bon = wav_to_sound("bon.wav");
-    sound_t* j = wav_to_sound("j.wav");
-    sound_t* ou = wav_to_sound("ou.wav");
-    sound_t* r = wav_to_sound("r.wav");
+    //wav to sound
+    printf("ok");
+    sound_t* s = wav_to_sound("s.wav");
+    sound_t* a = wav_to_sound("a.wav");
+    sound_t* v = wav_to_sound("v.wav");
+    sound_t* t = wav_to_sound("t.wav");
+    sound_t* R = wav_to_sound("R_.wav");
     sound_t* espace = wav_to_sound("espace.wav");
-    sound_t* m = wav_to_sound("m.wav");
-    sound_t* on = wav_to_sound("on.wav");
-    sound_t* de =wav_to_sound("de.wav");
+    sound_t* b  = wav_to_sound("b.wav");
+    sound_t* j  = wav_to_sound("j.wav");
+    sound_t* E  = wav_to_sound("E_.wav");
+    sound_t* in =wav_to_sound("5.wav");
+
+    s= normalise (s , 0);
+    a= normalise (a , 2);
+    v= normalise (v , 0);
+    t= normalise (t , 0);
+    R= normalise (R , 0);
+    espace= normalise (espace , 2);
+    b= normalise (b , 0);
+    j= normalise (j , 1);
+    E= normalise (E , 2);
+    in= normalise (in , 2);
 
 
 
-    sound_t* n1 = fondu(bon , j , FE, 2);
-    sound_t* n2 = fondu(n1 , ou , FE, 0);
-    sound_t* n3 = fondu(n2 , r , FE, 1);
+
+
+    
+    printf("debut fondus ok \n");
+
+    sound_t* n1 = fondu(s , a , FE, 2);
+    sound_t* n2 = fondu(n1 , v , FE, 0);
+    sound_t* n3 = fondu(n2 , a , FE, 1);
     sound_t* n4 = fondu(n3 , espace , FE, 2);
-    sound_t* n5 = fondu(n4 , m , FE, 2);
-    sound_t* n6 = fondu(n5 , on , FE, 0);
-    sound_t* n7 = fondu(n6 , de , FE, 2);
+    sound_t* n5 = fondu(n4 , t , FE, 2);
+    sound_t* n6 = fondu(n5 , R , FE, 0);
+    sound_t* n7 = fondu(n6 , E , FE, 2);
     sound_t* n8 = fondu(n7 , espace , FE, 2);
-    sound_t* n9 = fondu(n8 , r , FE, 2);
-    sound_t* n10 = fondu(n9 , on , FE, 0);
-    sound_t* n11 = fondu(n10 , j , FE, 1);
-    sound_t* n12 = fondu(n11 , on , FE, 0);
-    sound_t* fin = fondu(n12 , r , FE, 1);
+    sound_t* n9 = fondu(n8 , b , FE, 2);
+    sound_t* n10 = fondu(n9 , j , FE, 0);
+    sound_t* fin = fondu(n10 , in , FE, 1);
 
 
-    save_sound("bjr_monde_ronjon.wav", fin);
+    printf("fin des fondus ok \n");
 
-
-
-    free_sound_t(bon);
-    free_sound_t(j);
-    free_sound_t(ou);
-    free_sound_t(r);
-    free_sound_t(m);
-    free_sound_t(on);
-    free_sound_t(de);
-    free_sound_t(espace);
-
-    free_sound_t(n1);
-    free_sound_t(n2);
-    free_sound_t(n3);
-    free_sound_t(n4);
-    free_sound_t(n5);
-    free_sound_t(n6);
-    free_sound_t(n7);
-    free_sound_t(n8);
-    free_sound_t(n9);
-    free_sound_t(n10);
-    free_sound_t(n11);
-    free_sound_t(n12);
-
-
+    save_sound("ca_va.wav", fin);
+    printf("ok");
     free_sound_t(fin);
-
-
 
     return 0;
 }
+
